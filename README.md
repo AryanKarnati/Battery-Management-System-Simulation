@@ -3,67 +3,50 @@ This project is a C-based simulation of a multi-cell Battery Management System (
 
 Instead of relying on hardware, this simulator models the physics of a battery pack virtually. It’s designed to be lightweight, portable, and easy to extend — making it useful for both educational purposes and early-stage algorithm testing.
 
+## 🔍 What the Simulator Does
 
-🔍 What the Simulator Does
+The simulator creates a **virtual battery pack** composed of multiple cells. At each time step, it updates the state of each cell using physics-based models:
 
-The program creates a virtual battery pack composed of multiple cells. At each time step, the simulator updates the state of each cell by applying physics-based models:
+### ⚡ State of Charge (SoC) Estimation
+- Tracks charge in/out using **coulomb counting**  
+- Includes a **charge efficiency factor**  
 
-State of Charge (SoC) Estimation
+### 🔋 Open Circuit Voltage (OCV) Modeling
+- Voltage depends on **SoC × Temperature**  
+- Uses **bilinear interpolation** across lookup tables  
 
-Uses coulomb counting to track how much charge has flowed in/out.
+### 🌡️ Thermal Model
+- Cells heat up from **I²R losses**  
+- Heat transfer occurs between **adjacent cells** and the **environment**  
+- Includes **temperature clamping** for realistic min/max ranges  
 
-Includes a simple charge efficiency factor.
+### ⏳ Aging Model (Placeholder)
+- Tracks **calendar aging** in hours  
+- Can be extended to **cycle-based degradation**  
 
-Open Circuit Voltage (OCV) Modeling
+### ⚠️ Fault Injection Hooks
+- Framework for simulating:  
+  - Over-voltage (OV)  
+  - Under-voltage (UV)  
+  - Over-temperature (OT)  
+  - Under-temperature (UT)  
 
-Each cell’s voltage is determined by its SoC and temperature.
+## 📈 Why This Matters
 
-Uses bilinear interpolation across lookup tables (SoC × Temp).
+In real systems, a **Battery Management System (BMS)** is responsible for:  
+- 🛑 Preventing dangerous conditions (thermal runaway, over-discharge)  
+- 🔋 Estimating remaining energy (**SoC**) and lifetime (**SoH**)  
+- ⚖️ Balancing cells for safety and longevity  
 
-Thermal Model
+This simulator abstracts those same principles into a **numerical C program**, letting you visualize how **SoC, voltage, and temperature** evolve over time under a given load current.
 
-Cells heat up based on current and internal resistance (I²R losses).
+### Example: Constant Discharge Current
+- 🔽 **SoC decreases steadily**  
+- 📉 **Voltage sags** (due to both OCV curve and internal resistance)  
+- 🌡️ **Temperature rises** (from heat generation)  
 
-Heat transfer occurs between adjacent cells and with the environment.
+### Fault Conditions (Future Hooks)
+- ⚠️ Over-temperature (**OT**)  
+- ❄️ Under-temperature (**UT**)  
 
-Includes clamping for realistic min/max operating temperatures.
 
-Aging Model (Placeholder)
-
-Tracks calendar aging in hours.
-
-Can be extended to cycle-based degradation.
-
-Fault Injection Hooks
-
-Framework for simulating faults such as:
-
-Over-voltage (OV)
-
-Under-voltage (UV)
-
-)
-
-📈 Why This Matters
-
-In real systems, the BMS is responsible for:
-
-Preventing dangerous conditions (thermal runaway, over-discharge).
-
-Estimating remaining energy (SoC) and lifetime (SoH).
-
-Balancing cells for safety and longevity.
-
-This simulator abstracts those same principles into a numerical C program, letting you see how SoC, voltage, and temperature evolve over time under a given load current.
-
-For example, a constant discharge current results in:
-
-SoC decreasing steadily
-
-Voltage sagging (due to both OCV curve and internal resistance)
-
-Temperature rising (from heat generation)
-
-Over-temperature (OT)
-
-Under-temperature (UT)
